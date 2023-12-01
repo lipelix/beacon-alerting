@@ -15,12 +15,12 @@ It will consist of bunch of chapters - at first we need to create PoC and, grab 
 Outcome of this chapter will be functional model with components connected on breadboard - beacon will be simulated with Light-Emitting Diode - which will react on external signal (sended through wifi or GSM) - diode will start blink.
 
 - [ ] Decide wifi vs GSM approach
-  - [ ] 📶 PoC of GSM approach ![IN_PROGRESS]
+  - [ ] 📶 PoC of GSM approach ![POSTPONED]
     - [ ] Create simulation (https://wokwi.com/)
     - [ ] Gather all components
     - [ ] Assemble components on breadboard
     - [ ] Kick-off firmware and upload it to board  
-  - [ ] 🛜 PoC of Wifi approach ![TODO]
+  - [ ] 🛜 PoC of Wifi approach ![IN_PROGRESS]
     - [ ] Create simulation (https://wokwi.com/)
     - [ ] Gather all components
     - [ ] Assemble components on breadboard
@@ -102,12 +102,33 @@ Then firmware will turn-on pins which will init beacon.
 
 # Progress
 
-`03-11-2023`
+### `03-11-2023`
+Party started 🎉
+
+- prepared components
+- created plan
+
 ![Party started](assets/getting_ready_03_11_2023.jpg)
+
+---
+
+### `01-12-2023`
+
+Work on Chapter I. 
+
+- GSM approach has been swith to ![POSTPONED] stated because SIM card expired 😢 https://www.mobil.cz/podpora?otazka=jak-dlouho-zustava-sim-karta-mobilcz-aktivni
+- Switch focus  to Wi-fi approach
+  - There are some problems with connection of Lolin esp8266 (it just blink when connect through usb serial port 😢)
+  - created wokwi simulation https://wokwi.com/projects/382920450883485697
+  - it is not possible to simulate incoming network traffic in free version 😢 https://docs.wokwi.com/guides/esp32-wifi#internet-access
+  - there is `webhook` integration which will allow call url (exposed by wi-fi module) from ops-genie https://heureka.app.opsgenie.com/teams/dashboard/454e0517-88ca-4aa4-b481-a0996c263794/integrations/webhook/53878d00-3572-45da-a83a-077d9bbf4a9b
+
+![Gsm vs Wi-fi](assets/chapter_1_wifi_or_gsm_01_12_2023.jpg)
 
 
 # Used components
 - Arduino Nano: https://dratek.cz/arduino/823-arduino-nano-v3.0-atmega328-precizni-klon.html
+- Lolin Nodemcu Esp8266 https://dratek.cz/arduino/122953-lua-nodemcu-esp8266-v3-wifi-modul.html
 > TBA
 
 
@@ -116,4 +137,5 @@ Then firmware will turn-on pins which will init beacon.
 <!-- Image links -->
 [IN_PROGRESS]: https://img.shields.io/badge/IN_PROGRESS-green.svg
 [WONT_DO]: https://img.shields.io/badge/WONT_DO-inactive.svg
+[POSTPONED]: https://img.shields.io/badge/POSTPONED-inactive.svg
 [TODO]: https://img.shields.io/badge/TODO-blue.svg
