@@ -139,9 +139,6 @@ Work on Chapter I.
 curl --location --request POST 'https://turtle-hip-endlessly.ngrok-free.app/' --header 'ngrok-skip-browser-warning: 1'
   ```
 
-![Gsm vs Wi-fi](assets/chapter_1_wifi_or_gsm_01_12_2023.jpg)
-
-
 # Used components
 - Arduino Nano: https://dratek.cz/arduino/823-arduino-nano-v3.0-atmega328-precizni-klon.html
 - Lolin Nodemcu Esp8266 https://dratek.cz/arduino/122953-lua-nodemcu-esp8266-v3-wifi-modul.html
