@@ -15,12 +15,12 @@ It will consist of bunch of chapters - at first we need to create PoC and, grab 
 Outcome of this chapter will be functional model with components connected on breadboard - beacon will be simulated with Light-Emitting Diode - which will react on external signal (sended through wifi or GSM) - diode will start blink.
 
 - [ ] Decide wifi vs GSM approach
-  - [ ] 📶 PoC of GSM approach ![POSTPONED]
+  - [x] 📶 PoC of GSM approach ![IN_PROGRESS]
     - [ ] Create simulation (https://wokwi.com/)
     - [ ] Gather all components
     - [ ] Assemble components on breadboard
     - [ ] Kick-off firmware and upload it to board  
-  - [ ] 🛜 PoC of Wifi approach ![IN_PROGRESS]
+  - [ ] 🛜 PoC of Wifi approach ![POSTPONED]
     - [ ] Create simulation (https://wokwi.com/)
     - [ ] Gather all components
     - [ ] Assemble components on breadboard
@@ -61,7 +61,7 @@ Outcome of this chapter will be functional model with components connected throu
 2 approaches how to do this:
 
 ### 1) Wifi based approach 🛜
-![WONT_DO]
+![IN_PROGRESS]
 
 This will need wi-fi module (is part NodeMCU). Firmware will need be connected with opsgenie through API. This should be handled by some ospgenie integration.
 
@@ -76,7 +76,7 @@ Then firmware will turn-on pins which will init beacon.
 - handling opsgenie integration
 
 ### 2) GSM based approach 📶
-![IN_PROGRESS]
+![POSTPONED]
 
 This will need GSM module and main micro-controller(arduinoNano). Firmware will need to handle incomming calls or SMS from opsgenie.
 
@@ -122,6 +122,22 @@ Work on Chapter I.
   - created wokwi simulation https://wokwi.com/projects/382920450883485697
   - it is not possible to simulate incoming network traffic in free version 😢 https://docs.wokwi.com/guides/esp32-wifi#internet-access
   - there is `webhook` integration which will allow call url (exposed by wi-fi module) from ops-genie https://heureka.app.opsgenie.com/teams/dashboard/454e0517-88ca-4aa4-b481-a0996c263794/integrations/webhook/53878d00-3572-45da-a83a-077d9bbf4a9b
+
+![Gsm vs Wi-fi](assets/chapter_1_wifi_or_gsm_01_12_2023.jpg)
+
+---
+
+### `31-01-2024`
+
+Work on Chapter I. 
+
+- Create outgoing integration from OpsGenie to webhook
+  - tested that when alert is fired, webhook is called
+  - using `ngrok` tool https://dashboard.ngrok.com/cloud-edge/endpoints
+  - create playground-app and add webhook payload examples for `create`,`acknowledge`,`unacknowledge`,`closed` events
+```
+curl --location --request POST 'https://turtle-hip-endlessly.ngrok-free.app/' --header 'ngrok-skip-browser-warning: 1'
+  ```
 
 ![Gsm vs Wi-fi](assets/chapter_1_wifi_or_gsm_01_12_2023.jpg)
 
