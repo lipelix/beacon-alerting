@@ -137,7 +137,22 @@ Work on Chapter I.
   - create playground-app and add webhook payload examples for `create`,`acknowledge`,`unacknowledge`,`closed` events
 ```
 curl --location --request POST 'https://turtle-hip-endlessly.ngrok-free.app/' --header 'ngrok-skip-browser-warning: 1'
-  ```
+```
+
+---
+
+### `21-02-2024`
+
+Work on Chapter I. 
+
+- Integration between micro-controller and cloudflare worker
+  - create integration with websockets micro-controller is client cloudflare worker server
+  - `beacon-alerting/wi-fi/wifi/wifi.ino` - receive messages from cf worker
+  - adjust playground-app and add webhook integration `beacon-alerting/playground-app/index.html`
+  - cf worker runs on `https://beacon-alerts.lipelix.workers.dev/`
+
+![Output of micro-controller](image.png)
+
 
 # Used components
 - Arduino Nano: https://dratek.cz/arduino/823-arduino-nano-v3.0-atmega328-precizni-klon.html
