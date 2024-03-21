@@ -151,7 +151,22 @@ Work on Chapter I.
   - adjust playground-app and add webhook integration `beacon-alerting/playground-app/index.html`
   - cf worker runs on `https://beacon-alerts.lipelix.workers.dev/`
 
-![Output of micro-controller](image.png)
+![Output of micro-controller](assets/image.png)
+
+### `20-03-2024`
+
+---
+
+Work on Chapter I. 
+
+- Get components together on breadboard
+  - 😿 Find out that Nodemcu do not deliver enough power to turn on relay (only 40mA but relay needs 120mA)
+  - Need to use mosfet instead of relay - https://dratek.cz/arduino/1754-pwm-15a-400w-mosfet.html
+- Firmware development
+  - 🎉 Correctly setup pins and ON/OFF states in `wifi.ino`
+- Integration between micro-controller and cloudflare worker
+
+![Relay does not switch, but it works manually](assets/image-2.png)
 
 
 # Used components
