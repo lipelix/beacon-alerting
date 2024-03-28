@@ -1,98 +1,227 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script>
-/*
-  WebSocket connection Script
-  Uses standard W3C WebSocket API, not socket.io API
-  Connects to a local websocket server
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      .main {
+        display: flex;
+        margin-top: 60px;
+      }
 
-  created 7 Jan 2021
-  modified 17 Jan 2021
-  by Tom Igoe
-*/
-let serverURL;
+      body {
+        font-family: system-ui;
+      }
 
-let socket;
-// variables for the DOM elements:
-let incomingSpan;
-let outgoingText;
-let connectionSpan;
-let connectButton;
+      #server-url {
+        min-width: 300px;
+      }
 
-function setup() {
-  // get all the DOM elements that need listeners:
-  incomingSpan = document.getElementById('incoming');
-  outgoingText = document.getElementById('outgoing');
-  connectionSpan = document.getElementById('connection');
-  connectButton = document.getElementById('connectButton');
-  // set the listeners:
-  outgoingText.addEventListener('change', sendMessage);
-  connectButton.addEventListener('click', changeConnection);
-  serverURL = document.getElementById('serverURL').value;
-  openSocket(serverURL);
-}
+      #beacon-alerts {
+        display: flex;
+        flex-direction: column-reverse;
+        align-items: center;
+      }
 
-function openSocket(url) {
-  // open the socket:
-  socket = new WebSocket(url);
-  socket.addEventListener('open', openConnection);
-  socket.addEventListener('close', closeConnection);
-  socket.addEventListener('message', readIncomingMessage);
-}
+      #incoming {
+        display: flex;
+        flex-flow: column;
+        /* background: antiquewhite; */
+        width: 310px;
+        scroll-behavior: auto;
+        flex-direction: column-reverse;
+        align-items: center;
+      }
 
+      .cf-wrapper,
+      .beacon-wrapper,
+      .network-wrapper {
+        flex: 1;
+        width: 33.33%;
+        display: flex;
+        flex-flow: column;
+        justify-content: space-between;
+        align-items: center;
+        row-gap: 10px;
+      }
 
-function changeConnection(event) {
-  // open the connection if it's closed, or close it if open:
-  if (socket.readyState === WebSocket.CLOSED) {
-    openSocket(serverURL);
-  } else {
-    socket.close();
-  }
-}
+      .cf-wrapper {
+        align-self: flex-start;
+      }
 
-function openConnection() {
-  // display the change of state:
-  connectionSpan.innerHTML = "true";
-  connectButton.value = "Disconnect";
-}
+      .network-wrapper {
+        height: 180px;
+        overflow: hidden;
+      }
 
-function closeConnection() {
-  // display the change of state:
-  connectionSpan.innerHTML = "false";
-  connectButton.value = "Connect";
-}
+      .chip {
+        margin-top: 4px;
+        display: inline-block;
+        padding: 0 25px;
+        height: 40px;
+        font-size: 12px;
+        line-height: 40px;
+        border-radius: 25px;
+        background-color: #f1f1f1;
+        font-family: monospace;
+      }
 
-function readIncomingMessage(event) {
-  // display the incoming message:
-  incomingSpan.innerHTML += `${event.data}<br>`;
-}
+      .chip img {
+        float: left;
+        margin: 0 10px 0 -25px;
+        height: 40px;
+        width: 40px;
+        border-radius: 50%;
+      }
+    </style>
+    <script
+      src="https://kit.fontawesome.com/9f8b6c53d8.js"
+      crossorigin="anonymous"
+    ></script>
+    <link rel="stylesheet" href="styles.css" />
+    <title>Cloudflare Worker Testing</title>
+  </head>
+  <body>
+    <h1>Cloudflare Worker Testing</h1>
+    <p>
+      This client connects to a WebSocket server. It receives messages and
+      simulate a beacon alert.
+    </p>
 
-function sendMessage() {
-  //if the socket's open, send a message:
-  if (socket.readyState === WebSocket.OPEN) {
-    socket.send(outgoingText.value);
-  }
-}
+    <div class="main">
+      <div class="cf-wrapper">
+        <i
+          class="fa-brands fa-cloudflare fa-border"
+          style="font-size: 120px; color: #f3a73e"
+        ></i>
+        <i id="network-icon" class="fa-solid fa-tower-broadcast fa-fade"></i>
+        <input
+          type="text"
+          id="server-url"
+          value="wss://beacon-alerts.lipelix.workers.dev"
+        />
+      </div>
+      <div class="network-wrapper">
+        <div id="incoming"></div>
+      </div>
+      <div class="beacon-wrapper">
+        <i
+          id="beacon-icon"
+          class="fa-solid fa-lightbulb fa-border"
+          style="font-size: 120px; color: antiquewhite"
+        ></i>
+        <div id="beacon-alerts"></div>
+      </div>
+    </div>
+    <script>
+      const appState = {
+        alerts: [],
+        beaconOn: false,
+        messages: [],
+        socket: null,
+      };
 
-// add a listener for the page to load:
-window.addEventListener('load', setup);
-</script>
-  <link rel="stylesheet" href="styles.css">
-  <title>WebSocket</title>
-</head>
-<body>
-  <h1>WebSocket Client</h1>
- <p> This client connects to a WebSocket server. It sends when you press return in the outgoing message box. 
-</p>
-  <div>
-    Server Address: <input type="text" id="serverURL" value="wss://beacon-alerts.lipelix.workers.dev"><br>
-    Connected to server: <span id="connection">false</span><br>
-    <input type="button" id="connectButton" value="Connect"><br>
-    Outgoing message: <input type="text" id="outgoing"><br>
-    Incoming message: <pre id="incoming"></pre><br>
-  </div>
-</body>
+      const refs = {
+        incomingDiv: document.getElementById("incoming"),
+        networkIcon: document.getElementById("network-icon"),
+        beaconAlertsDiv: document.getElementById("beacon-alerts"),
+        beaconIcon: document.getElementById("beacon-icon"),
+        serverURL: document.getElementById("server-url"),
+      };
+
+      const renderState = () => {
+        refs.beaconAlertsDiv.innerHTML = appState.alerts
+          .map(
+            (alert) =>
+              `<div class="chip"><i class="fa-solid fa-triangle-exclamation fa-beat" style="color: #e61b05;"></i> ${alert} </div>`
+          )
+          .join("");
+
+        refs.incomingDiv.innerHTML = appState.messages
+          .map(
+            (message) =>
+              `<div class="chip"><i class="fa-solid fa-message fa-bounce"></i> ${message} </div>`
+          )
+          .join("");
+
+        refs.beaconIcon.style = appState.beaconOn
+          ? "font-size: 120px; color: #e61b05"
+          : "font-size: 120px; color: antiquewhite";
+
+        refs.networkIcon.style =
+          appState.socket.readyState === WebSocket.OPEN
+            ? "font-size: 24px; color: #77F33E"
+            : "font-size: 24px; color: #F33E3E";
+      };
+
+      const setup = () => {
+        // set the listeners:
+        document.addEventListener("render", renderState);
+
+        refs.serverURL.addEventListener("change", changeConnection);
+        openSocket(refs.serverURL.value);
+      };
+
+      const openSocket = (url) => {
+        // open the socket:
+        appState.socket = new WebSocket(url);
+        appState.socket.addEventListener("open", openConnection);
+        appState.socket.addEventListener("close", closeConnection);
+        appState.socket.addEventListener("message", processIncomingMessage);
+      };
+
+      const changeConnection = (event) => {
+        if (appState.socket.readyState === WebSocket.CLOSED) {
+          openSocket(refs.serverURL.value);
+        } else {
+          appState.socket.close();
+        }
+      };
+
+      const openConnection = () => {
+        console.log("Open connection");
+        dispatchRender();
+      };
+
+      const closeConnection = () => {
+        console.log("Close connection");
+        dispatchRender();
+      };
+
+      const processIncomingMessage = (event) => {
+        appState.messages.push(event.data);
+
+        const beaconState = {
+          Acknowledge: false,
+          Close: false,
+          Create: true,
+          UnAcknowledge: true,
+        }[event.data];
+
+        if (beaconState) {
+          appState.alerts.push(event.data);
+        } else {
+          appState.alerts.pop();
+        }
+
+        appState.beaconOn = appState.alerts.length > 0;
+
+        console.log("appState", appState);
+        dispatchRender();
+      };
+
+      const dispatchRender = () => {
+        document.dispatchEvent(
+          new CustomEvent("render", {
+            bubbles: true,
+            cancelable: true,
+            composed: false,
+          })
+        );
+      };
+
+      // add a listener for the page to load:
+      window.addEventListener("load", setup);
+    </script>
+  </body>
 </html>
