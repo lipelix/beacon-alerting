@@ -10,21 +10,21 @@ This project handles alerts coming from opsgenie turn on beacon placed in Pilsen
 
 It will consist of bunch of chapters - at first we need to create PoC and, grab all components (software and hardware) and check if it is feasible. After that we can move forward and start to figuring out how to solve power, soldering (or create custom board..) and make advanced prototype - the Alpha. At the end of Alpha it will work, but will not be beauty - that will be last part.
 
-## 🛫 Chapter I - PoC  ![IN_PROGRESS]
+## 🛫 Chapter I - PoC  ![DONE]
 
 Outcome of this chapter will be functional model with components connected on breadboard - beacon will be simulated with Light-Emitting Diode - which will react on external signal (sended through wifi or GSM) - diode will start blink.
 
 - [ ] Decide wifi vs GSM approach
-  - [x] 📶 PoC of GSM approach ![IN_PROGRESS]
+  - [x] 📶 PoC of GSM approach ![POSTPONED]
     - [ ] Create simulation (https://wokwi.com/)
     - [ ] Gather all components
     - [ ] Assemble components on breadboard
     - [ ] Kick-off firmware and upload it to board  
-  - [ ] 🛜 PoC of Wifi approach ![POSTPONED]
-    - [ ] Create simulation (https://wokwi.com/)
-    - [ ] Gather all components
-    - [ ] Assemble components on breadboard
-    - [ ] Kick-off firmware and upload it to board
+  - [x] 🛜 PoC of Wifi approach ![DONE]
+    - [x] Create simulation (https://wokwi.com/)
+    - [x] Gather all components
+    - [x] Assemble components on breadboard
+    - [x] Kick-off firmware and upload it to board
 - [ ] Present functional prototype
 - [ ] Get a beer
 
@@ -169,6 +169,25 @@ Work on Chapter I.
 ![Relay does not switch, but it works manually](assets/image-2.png)
 
 
+### `01-04-2024`
+
+---
+
+🎉 Finalize Chapter I. 
+- Get components together on "Mlekarna kunin" base
+  - solder jumpers on mosfet
+  - connect all components together
+- Firmware development
+  - Use only ON/OFF states instead of full action description to simplify thing `wifi.ino`
+- Create integration between micro-controller and cloudflare worker
+  - Deploy both workers
+    - `beacon-alerts.lipelix.workers.dev` - server which sends status of beacon to micro-controller
+    - `beacon-alerts-client.lipelix.workers.dev` - client which receives alerts from ospgenie and change state in KV store
+
+![Final PoC with components all together](assets/IMG_5723.jpg)
+![Chapter I. PoC - Architecture](assets/poc.svg)
+![Chapter I. PoC - Wiring](assets/wiring.svg)
+
 # Used components
 - Arduino Nano: https://dratek.cz/arduino/823-arduino-nano-v3.0-atmega328-precizni-klon.html
 - Lolin Nodemcu Esp8266 https://dratek.cz/arduino/122953-lua-nodemcu-esp8266-v3-wifi-modul.html
@@ -179,6 +198,7 @@ Work on Chapter I.
 
 <!-- Image links -->
 [IN_PROGRESS]: https://img.shields.io/badge/IN_PROGRESS-green.svg
+[DONE]: https://img.shields.io/badge/DONE-purple.svg
 [WONT_DO]: https://img.shields.io/badge/WONT_DO-inactive.svg
 [POSTPONED]: https://img.shields.io/badge/POSTPONED-inactive.svg
 [TODO]: https://img.shields.io/badge/TODO-blue.svg
