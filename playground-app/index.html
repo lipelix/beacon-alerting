@@ -192,16 +192,14 @@
         appState.messages.push(event.data);
 
         const beaconState = {
-          Acknowledge: false,
-          Close: false,
-          Create: true,
-          UnAcknowledge: true,
+          ON: true,
+          OFF: false,
         }[event.data];
 
         if (beaconState) {
-          appState.alerts.push(event.data);
+          appState.alerts = [event.data];
         } else {
-          appState.alerts.pop();
+          appState.alerts = [];
         }
 
         appState.beaconOn = appState.alerts.length > 0;
