@@ -166,7 +166,7 @@ Work on Chapter I.
   - 🎉 Correctly setup pins and ON/OFF states in `wifi.ino`
 - Integration between micro-controller and cloudflare worker
 
-![Relay does not switch, but it works manually](assets/image-2.png)
+![Relay does not switch, but it works manually](assets/image-2.jpg)
 
 
 ### `01-04-2024`
