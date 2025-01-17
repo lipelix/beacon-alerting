@@ -1,0 +1,3 @@
+# This is used in GitLab CI/CD to run the SonarQube analysis and send the results to the SonarQube server.
+include:
+  - local: .gitlab/sonarqube.yml
